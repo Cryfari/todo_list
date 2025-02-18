@@ -1,5 +1,7 @@
 
 const InvariantError = require('../../exceptions/InvariantError');
+const NotFoundError = require('../../exceptions/NotFoundError');
+const ClientError = require('../../exceptions/ClientError');
 
 class TodosService {
   constructor(pool, idGenerator) {
@@ -18,10 +20,33 @@ class TodosService {
     const result = await this._pool.query(query);
 
     if (!result.rows.length) {
-      throw new InvariantError('Todo failed to add');
+      throw new ClientError('Todo failed to add');
     }
 
     return result.rows[0].id;
+  }
+
+  async getTodoById(id) {
+    const query = {
+      text: 'SELECT id, title, description, due_date, priority, is_completed FROM todos WHERE id = $1 AND is_deleted = false',
+      values: [id],
+    };
+
+    const result = await this._pool.query(query);
+
+    if(!result.rows.length) {
+      throw new NotFoundError('Todo not found');
+    }
+    return result.rows[0]
+  }
+
+  async getTodos() {
+    const query = {
+      text: 'SELECT id, title, description, due_date, priority, is_completed FROM todos WHERE is_deleted = false',
+    };
+
+    const result = await this._pool.query(query);
+    return result.rows;
   }
 }
 
