@@ -1,0 +1,409 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+      "title": "Todo API",
+      "description": "Todo API",
+      "version": "1.0.0"
+  },
+  "servers": [
+      {
+          "url": "http://localhost:3000"
+      }
+  ],
+  "paths": {
+    "/api/todos":{
+      "post":{
+        "summary":"Create a new todo",
+        "requestBody":{
+          "content":{
+            "application/json":{
+              "schema":{
+                "type":"object",
+                "properties":{
+                  "title":{
+                    "type":"string"
+                  },
+                  "description":{
+                    "type":"string"
+                  },
+                  "due_date":{
+                    "type":"string",
+                    "format":"date"
+                  },
+                  "priority":{
+                    "type":"string",
+                    "enum":[
+                      "low",
+                      "medium",
+                      "high"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses":{
+          "201":{
+            "description":"Success create a new todo",
+            "content":{
+              "application/json":{
+                "schema":{
+                  "type":"object",
+                  "properties":{
+                    "data":{
+                      "type":"object",
+                      "properties":{
+                        "id":{
+                          "type":"string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400":{
+            "description":"Bad request",
+            "content":{
+              "application/json":{
+                "schema":{
+                  "type":"object",
+                  "properties":{
+                    "errors":{
+                      "type":"object",
+                      "properties":{
+                        "title":{
+                          "type":"string"
+                        },
+                        "description":{
+                          "type":"string"
+                        },
+                        "due_date":{
+                          "type":"string"
+                        },
+                        "priority":{
+                          "type":"string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get":{
+        "summary":"Get all todos",
+        "responses":{
+          "200":{
+            "description":"Success get all todos",
+            "content":{
+              "application/json":{
+                "schema":{
+                  "type":"object",
+                  "properties":{
+                    "data":{
+                      "type":"array",
+                      "items":{
+                        "type":"object",
+                        "properties":{
+                          "id":{
+                            "type":"string"
+                          },
+                          "title":{
+                            "type":"string"
+                          },
+                          "description":{
+                            "type":"string"
+                          },
+                          "due_date":{
+                            "type":"string",
+                            "format":"date"
+                          },
+                          "priority":{
+                            "type":"string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/todos/{id}":{
+      "get":{
+        "summary":"Get a todo by id",
+        "parameters":[
+          {
+            "name":"id",
+            "in":"path",
+            "required":true,
+            "schema":{
+              "type":"string"
+            }
+          }
+        ],
+        "responses":{
+          "200":{
+            "description":"Success get a todo by id",
+            "content":{
+              "application/json":{
+                "schema":{
+                  "type":"object",
+                  "properties":{
+                    "data":{
+                      "type":"object",
+                      "properties":{
+                        "id":{
+                          "type":"string"
+                        },
+                        "title":{
+                          "type":"string"
+                        },
+                        "description":{
+                          "type":"string"
+                        },
+                        "due_date":{
+                          "type":"string",
+                          "format":"date"
+                        },
+                        "priority":{
+                          "type":"string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404":{
+            "description":"Todo not found",
+            "content":{
+              "application/json":{
+                "schema":{
+                  "type":"object",
+                  "properties":{
+                    "message":{
+                      "type":"string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch":{
+        "summary": "Complete a todo by id",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success complete a todo by id",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Todo not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put":{
+        "summary":"Update a todo by id",
+        "parameters":[
+          {
+            "name":"id",
+            "in":"path",
+            "required":true,
+            "schema":{
+              "type":"string"
+            }
+          }
+        ],
+        "requestBody":{
+          "content":{
+            "application/json":{
+              "schema":{
+                "type":"object",
+                "properties":{
+                  "title":{
+                    "type":"string"
+                  },
+                  "description":{
+                    "type":"string"
+                  },
+                  "due_date":{
+                    "type":"string",
+                    "format":"date"
+                  },
+                  "priority":{
+                    "type":"string",
+                    "enum":[
+                      "low",
+                      "medium",
+                      "high"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses":{
+          "200":{
+            "description":"Success update a todo by id",
+            "content":{
+              "application/json":{
+                "schema":{
+                  "type":"object",
+                  "properties":{
+                    "data":{
+                      "type":"object",
+                      "properties":{
+                        "id":{
+                          "type":"string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400":{
+            "description":"Bad request",
+            "content":{
+              "application/json":{
+                "schema":{
+                  "type":"object",
+                  "properties":{
+                    "errors":{
+                      "type":"object",
+                      "properties":{
+                        "title":{
+                          "type":"string"
+                        },
+                        "description":{
+                          "type":"string"
+                        },
+                        "due_date":{
+                          "type":"string"
+                        },
+                        "priority":{
+                          "type":"string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404":{
+            "description":"Todo not found",
+            "content":{
+              "application/json":{
+                "schema":{
+                  "type":"object",
+                  "properties":{
+                    "message":{
+                      "type":"string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete":{
+        "summary":"Delete a todo by id",
+        "parameters":[
+          {
+            "name":"id",
+            "in":"path",
+            "required":true,
+            "schema":{
+              "type":"string"
+            }
+          }
+        ],
+        "responses":{
+          "200":{
+            "description":"Success delete a todo by id",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404":{
+            "description":"Todo not found",
+            "content":{
+              "application/json":{
+                "schema":{
+                  "type":"object",
+                  "properties":{
+                    "message":{
+                      "type":"string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
