@@ -48,6 +48,19 @@ class TodosHandler {
       },
     };
   }
+
+  async putTodoByIdHandler(request) {
+    this._validator.validateTodoPayload(request.payload);
+    const {id} = request.params;
+
+    const result = await this._service.updateTodoById(id, request.payload);
+
+    return {
+      data: {
+        id: result,
+      },
+    };
+  }
 }
 
 module.exports = TodosHandler;

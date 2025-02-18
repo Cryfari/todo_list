@@ -18,7 +18,12 @@ const routes = (handler) => [
     method: 'PATCH',
     path: '/api/todos/{id}',
     handler: handler.patchCompleteTodoByIdHandler,
-  }
+  },
+  {
+    method: 'PUT',
+    path: '/api/todos/{id}',
+    handler: handler.putTodoByIdHandler,
+  },
 ];
 
 module.exports = routes;
