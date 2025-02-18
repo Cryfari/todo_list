@@ -1,9 +1,9 @@
-const{PostTodoPayloadSchema} = require('./schema');
+const{TodoPayloadSchema} = require('./schema');
 const InvariantError = require('../../exceptions/InvariantError');
 
 const TodosValidator = {
-  validatePostTodoPayload: (payload) => {
-    const validationResult = PostTodoPayloadSchema.validate(payload, {abortEarly: false});
+  validateTodoPayload: (payload) => {
+    const validationResult = TodoPayloadSchema.validate(payload, {abortEarly: false});
     if (validationResult.error) {
       const errors = {};
       validationResult.error.details.forEach(detail => {

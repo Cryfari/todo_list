@@ -9,7 +9,7 @@ class TodosHandler {
   }
 
   async postTodoHandler(request, h) {
-      this._validator.validatePostTodoPayload(request.payload);
+      this._validator.validateTodoPayload(request.payload);
 
       const todoId = await this._service.addTodo(request.payload);
 

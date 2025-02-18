@@ -1,11 +1,12 @@
 const Joi = require('joi');
 
-const PostTodoPayloadSchema = Joi.object({
+const TodoPayloadSchema = Joi.object({
   title: Joi.string().max(50).required().error(message),
   description: Joi.string().required().error(message),
   due_date: Joi.date().iso().min(new Date()).required().error(message),
   priority: Joi.string().valid('low', 'medium', 'high').required().error(message),
 });
+
 
 function message(errors) { 
   errors.forEach(err => {
@@ -36,4 +37,4 @@ function message(errors) {
   return errors;
 }
 
-module.exports = { PostTodoPayloadSchema };
+module.exports = { TodoPayloadSchema };
