@@ -158,4 +158,36 @@ describe('/api/todos enpoint', () => {
       expect(responseJson.message).toEqual('Todo not found');
     });
   });
+
+  describe('when PATCH /api/todos/{id}', () => {
+    it('should response 200 and return todo id', async () => {
+      const server = await createServer();
+      await TodosTableTestHelper.addTodo({
+        id: 'todo-123',
+        title: 'new todo',
+        description: 'new description',
+        due_date: '2090-08-08',
+        priority: 'low',
+      });
+      const response = await server.inject({
+        method: 'PATCH',
+        url: '/api/todos/todo-123',
+      });
+
+      const responseJson = JSON.parse(response.payload);
+      expect(response.statusCode).toEqual(200);
+      expect(responseJson.data.id).toBeDefined();
+    });
+    it('should response 404 when todo not found', async () => {
+      const server = await createServer();
+      const response = await server.inject({
+        method: 'PATCH',
+        url: '/api/todos/todo-123',
+      });
+
+      const responseJson = JSON.parse(response.payload);
+      expect(response.statusCode).toEqual(404);
+      expect(responseJson.message).toEqual('Todo not found');
+    });
+  });
 });

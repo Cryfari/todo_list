@@ -13,6 +13,11 @@ const routes = (handler) => [
     method: 'GET',
     path: '/api/todos',
     handler: handler.getTodosHandler,
+  },
+  {
+    method: 'PATCH',
+    path: '/api/todos/{id}',
+    handler: handler.patchCompleteTodoByIdHandler,
   }
 ];
 

@@ -38,6 +38,16 @@ class TodosHandler {
       data: todos,
     };
   }
+
+  async patchCompleteTodoByIdHandler(request) {
+    const {id} = request.params;
+    const result = await this._service.completeTodoById(id);
+    return {
+      data: {
+        id: result,
+      },
+    };
+  }
 }
 
 module.exports = TodosHandler;

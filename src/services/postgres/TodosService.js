@@ -48,6 +48,20 @@ class TodosService {
     const result = await this._pool.query(query);
     return result.rows;
   }
+
+  async completeTodoById(id) {
+    const query = {
+      text: 'UPDATE todos SET is_completed = true WHERE id = $1 AND is_deleted = false RETURNING id',
+      values: [id],
+    };
+
+    const result = await this._pool.query(query);
+
+    if (!result.rows.length) {
+      throw new NotFoundError('Todo not found');
+    }
+    return result.rows[0].id;
+  }
 }
 
 module.exports = TodosService;
