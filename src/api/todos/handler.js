@@ -21,6 +21,23 @@ class TodosHandler {
       response.code(201);
       return response;
   }
+
+  async getTodoByIdHandler(request) {
+    const {id} = request.params;
+    const todo = await this._service.getTodoById(id);
+    return {
+      data: {
+        todo,
+      },
+    };
+  }
+
+  async getTodosHandler() {
+    const todos = await this._service.getTodos();
+    return {
+      data: todos,
+    };
+  }
 }
 
 module.exports = TodosHandler;
