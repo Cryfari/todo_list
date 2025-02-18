@@ -10,6 +10,7 @@ const ClientError = require('../exceptions/ClientError');
 const todos = require('../api/todos');
 const TodosService = require('../services/postgres/TodosService');
 const TodosValidator = require('../validator/todos');
+const InvariantError = require('../exceptions/InvariantError');
 
 const createServer = async () => {
   const server = Hapi.server({
@@ -37,8 +38,15 @@ const createServer = async () => {
     const {response} = request;
     if (response instanceof Error) {
       if (response instanceof ClientError) {
+        if (response instanceof InvariantError) {
+          const newResponse = h.response({
+            errors: response.errors,
+          });
+          newResponse.code(response.statusCode);
+          return newResponse;
+        }
         const newResponse = h.response({
-          errors: response.errors,
+          message: response.message,
         });
         newResponse.code(response.statusCode);
         return newResponse;
