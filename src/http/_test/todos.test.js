@@ -190,4 +190,70 @@ describe('/api/todos enpoint', () => {
       expect(responseJson.message).toEqual('Todo not found');
     });
   });
+  describe('when PUT /api/todos/{id}', () => {
+    it('should response 200 and return todo id', async () => {
+      const server = await createServer();
+      await TodosTableTestHelper.addTodo({
+        id: 'todo-123',
+        title: 'new todo',
+        description: 'new description',
+        due_date: '2090-08-08',
+        priority: 'low',
+      });
+      const requestPayload = {
+        title: 'new todo',
+        description: 'new description',
+        due_date: '2090-08-08',
+        priority: 'low',
+      };
+      const response = await server.inject({
+        method: 'PUT',
+        url: '/api/todos/todo-123',
+        payload: requestPayload,
+      });
+
+      const responseJson = JSON.parse(response.payload);
+      expect(response.statusCode).toEqual(200);
+      expect(responseJson.data.id).toBeDefined();
+    });
+    it('should response 400 when add todo with bad payload', async () => {
+      const server = await createServer();
+      await TodosTableTestHelper.addTodo({
+        id: 'todo-123',
+        title: 'new todo',
+        description: 'new description',
+        due_date: '2090-08-08',
+        priority: 'low',
+      });
+      for (let i = 0; i < badPayload.length; i++) {
+        const response = await server.inject({
+          method: 'PUT',
+          url: '/api/todos/todo-123',
+          payload: badPayload[i],
+        });
+        const responseJson = JSON.parse(response.payload);
+        expect(response.statusCode).toEqual(400);
+        expect(typeof responseJson.errors).toBe('object');
+      }
+    });
+    it('should response 404 when todo not found', async () => {
+      const requestPayload = {
+        title: 'new todo',
+        description: 'new description',
+        due_date: '2090-08-08',
+        priority: 'low',
+      };
+      const server = await createServer();
+      const response = await server.inject({
+        method: 'PUT',
+        url: '/api/todos/todo-123',
+        payload: requestPayload,
+      });
+
+      const responseJson = JSON.parse(response.payload);
+      
+      expect(response.statusCode).toEqual(404);
+      expect(responseJson.message).toEqual('Todo not found');
+    });
+  });
 });
