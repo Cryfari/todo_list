@@ -9,7 +9,6 @@ const PostTodoPayloadSchema = Joi.object({
 
 function message(errors) { 
   errors.forEach(err => {
-    console.log(err);
     switch (err.code) {
       case "string.empty":
         err.message = "Value should not be empty!";
@@ -17,19 +16,20 @@ function message(errors) {
       case "string.base":
         err.message = "Value should be a string!";
         break;
-      case "date.min":
-        err.message = "Value should be a time after now!";
-        break;
       case "string.max":
         err.message = `Value should have at most ${err.local.limit} characters!`;
+        break;
+      case "date.format":
+        err.message = "Value should be a valid date!";
+        break;
+      case "date.min":
+        err.message = "Value should be a time after now!";
         break;
       case "any.required":
         err.message = "Value is required!";
         break;
       case "any.only":
         err.message = "Value should be one of low, medium, high!";
-        break;
-      default:
         break;
     }
   });

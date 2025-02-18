@@ -9,7 +9,6 @@ const TodosValidator = {
       validationResult.error.details.forEach(detail => {
         errors[detail.context.key] = detail.message;
       });
-      console.log(errors);
       throw new InvariantError(errors);
     }
   },
