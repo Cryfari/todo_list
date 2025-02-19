@@ -1,18 +1,15 @@
-require('dotenv').config();
+
 const Hapi = require('@hapi/hapi');
 
-const pool = require('../database/postgres/pool');
-
-const {nanoid} = require('nanoid');
 
 const ClientError = require('../exceptions/ClientError');
+const InvariantError = require('../exceptions/InvariantError');
 
 const todos = require('../api/todos');
 const TodosService = require('../services/postgres/TodosService');
 const TodosValidator = require('../validator/todos');
-const InvariantError = require('../exceptions/InvariantError');
 
-const createServer = async () => {
+const createServer = async (pool, nanoid) => {
   const server = Hapi.server({
     port: process.env.PORT,
     host: process.env.HOST,
