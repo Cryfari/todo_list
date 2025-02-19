@@ -2,6 +2,12 @@
 
 Todolist management simpel dalam bentuk Restful api menggunakan framework hapi.js
 
+## Dokumentasi
+Dokumentasi API lengkap tersedia di:
+
+[SwaggerHub](https://app.swaggerhub.com/apis/CryfariS(Pahrijal)/todo-api/1.0.0)
+atau
+[Json file](http://github.com/Cryfari/todo_list/blob/master/docs/todo-api.json)
 ## Instalasi
 
 instruksi langkah demi langkah cara menginstal proyek.
