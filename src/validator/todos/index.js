@@ -1,5 +1,6 @@
 const{TodoPayloadSchema} = require('./schema');
 const InvariantError = require('../../exceptions/InvariantError');
+const logger = require('../../log/logger');
 
 const TodosValidator = {
   validateTodoPayload: (payload) => {
@@ -9,6 +10,7 @@ const TodosValidator = {
       validationResult.error.details.forEach(detail => {
         errors[detail.context.key] = detail.message;
       });
+      logger.error({errors}, 'Payload not valid');
       throw new InvariantError(errors);
     }
   },
