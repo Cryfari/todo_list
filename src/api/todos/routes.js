@@ -24,6 +24,11 @@ const routes = (handler) => [
     path: '/api/todos/{id}',
     handler: handler.putTodoByIdHandler,
   },
+  {
+    method: 'DELETE',
+    path: '/api/todos/{id}',
+    handler: handler.deleteTodoByIdHandler,
+  }
 ];
 
 module.exports = routes;

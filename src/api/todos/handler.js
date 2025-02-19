@@ -61,6 +61,16 @@ class TodosHandler {
       },
     };
   }
+
+  async deleteTodoByIdHandler(request) {
+    const {id} = request.params;
+    await this._service.deleteTodoById(id);
+    return {
+      data: {
+        message: 'Todo deleted successfully',
+      },
+    };
+  }
 }
 
 module.exports = TodosHandler;
