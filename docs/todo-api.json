@@ -385,8 +385,8 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "is_deleted": {
-                      "type": "boolean"
+                    "message": {
+                      "type": "string"
                     }
                   }
                 }
