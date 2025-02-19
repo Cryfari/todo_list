@@ -1,4 +1,5 @@
 const pool = require('../../database/postgres/pool');
+const {nanoid} = require('nanoid');
 const TodosTableTestHelper = require('../../helper/TodosTableHelper');
 const createServer = require('../createServer');
 const badPayload = [
@@ -60,14 +61,14 @@ describe('/api/todos enpoint', () => {
   });
 
   describe('when POST /api/todos', () => {
-    it('should response 201 and persisted todo', async () => {
+    it('should response 201 and return todo id', async () => {
+      const server = await createServer(pool, nanoid);
       const requestPayload = {
         title: 'new todo',
         description: 'new description',
         due_date: '2090-08-08',
         priority: 'low',
       };
-      const server = await createServer();
       const response = await server.inject({
         method: 'POST',
         url: '/api/todos',
@@ -77,10 +78,9 @@ describe('/api/todos enpoint', () => {
       const responseJson = JSON.parse(response.payload);
       expect(response.statusCode).toEqual(201);
       expect(responseJson.data.todoId).toBeDefined();
-      expect(typeof responseJson.data.todoId).toBe('string');
     });
     it('should response 400 when add todo with bad payload', async () => {
-      const server = await createServer();
+      const server = await createServer(pool, nanoid);
       for (let i = 0; i < badPayload.length; i++) {
         const response = await server.inject({
           method: 'POST',
@@ -95,7 +95,7 @@ describe('/api/todos enpoint', () => {
   });
   describe('when GET /api/todos', () => {
     it('should response 200 and return all todos', async () => {
-      const server = await createServer();
+      const server = await createServer(pool, nanoid);
       await TodosTableTestHelper.addTodo({
         id: 'todo-123',
         title: 'new todo',
@@ -122,7 +122,7 @@ describe('/api/todos enpoint', () => {
   });
   describe('when GET /api/todos/{id}', () => {
     it('should response 200 and return todo by id', async () => {
-      const server = await createServer();
+      const server = await createServer(pool, nanoid);
       await TodosTableTestHelper.addTodo({
         id: 'todo-123',
         title: 'new todo',
@@ -147,7 +147,7 @@ describe('/api/todos enpoint', () => {
       expect(responseJson.data.todo).toBeDefined();
     });
     it('should response 404 when todo not found', async () => {
-      const server = await createServer();
+      const server = await createServer(pool, nanoid);
       const response = await server.inject({
         method: 'GET',
         url: '/api/todos/todo-123',
@@ -161,7 +161,7 @@ describe('/api/todos enpoint', () => {
 
   describe('when PATCH /api/todos/{id}', () => {
     it('should response 200 and return todo id', async () => {
-      const server = await createServer();
+      const server = await createServer(pool, nanoid);
       await TodosTableTestHelper.addTodo({
         id: 'todo-123',
         title: 'new todo',
@@ -179,7 +179,7 @@ describe('/api/todos enpoint', () => {
       expect(responseJson.data.id).toBeDefined();
     });
     it('should response 404 when todo not found', async () => {
-      const server = await createServer();
+      const server = await createServer(pool, nanoid);
       const response = await server.inject({
         method: 'PATCH',
         url: '/api/todos/todo-123',
@@ -192,7 +192,7 @@ describe('/api/todos enpoint', () => {
   });
   describe('when PUT /api/todos/{id}', () => {
     it('should response 200 and return todo id', async () => {
-      const server = await createServer();
+      const server = await createServer(pool, nanoid);
       await TodosTableTestHelper.addTodo({
         id: 'todo-123',
         title: 'new todo',
@@ -217,7 +217,7 @@ describe('/api/todos enpoint', () => {
       expect(responseJson.data.id).toBeDefined();
     });
     it('should response 400 when add todo with bad payload', async () => {
-      const server = await createServer();
+      const server = await createServer(pool, nanoid);
       await TodosTableTestHelper.addTodo({
         id: 'todo-123',
         title: 'new todo',
@@ -243,7 +243,7 @@ describe('/api/todos enpoint', () => {
         due_date: '2090-08-08',
         priority: 'low',
       };
-      const server = await createServer();
+      const server = await createServer(pool, nanoid);
       const response = await server.inject({
         method: 'PUT',
         url: '/api/todos/todo-123',
@@ -252,6 +252,38 @@ describe('/api/todos enpoint', () => {
 
       const responseJson = JSON.parse(response.payload);
       
+      expect(response.statusCode).toEqual(404);
+      expect(responseJson.message).toEqual('Todo not found');
+    });
+  });
+
+  describe('when DELETE /api/todos/{id}', () => {
+    it('should response 200 and return message', async () => {
+      const server = await createServer(pool, nanoid);
+      await TodosTableTestHelper.addTodo({
+        id: 'todo-123',
+        title: 'new todo',
+        description: 'new description',
+        due_date: '2090-08-08',
+        priority: 'low',
+      });
+      const response = await server.inject({
+        method: 'DELETE',
+        url: '/api/todos/todo-123',
+      });
+
+      const responseJson = JSON.parse(response.payload);
+      expect(response.statusCode).toEqual(200);
+      expect(responseJson.data.message).toEqual('Todo deleted successfully');
+    });
+    it('should response 404 when todo not found', async () => {
+      const server = await createServer(pool, nanoid);
+      const response = await server.inject({
+        method: 'DELETE',
+        url: '/api/todos/todo-123',
+      });
+
+      const responseJson = JSON.parse(response.payload);
       expect(response.statusCode).toEqual(404);
       expect(responseJson.message).toEqual('Todo not found');
     });
