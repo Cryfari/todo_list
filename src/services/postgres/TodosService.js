@@ -76,6 +76,19 @@ class TodosService {
     }
     return result.rows[0].id;
   }
+
+  async deleteTodoById(id) {
+    const query = {
+      text: 'UPDATE todos SET is_deleted = true WHERE id = $1 AND is_deleted = false RETURNING id',
+      values: [id],
+    };
+
+    const result = await this._pool.query(query);
+
+    if (!result.rows.length) {
+      throw new NotFoundError('Todo not found');
+    }
+  }
 }
 
 module.exports = TodosService;
